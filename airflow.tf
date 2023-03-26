@@ -26,8 +26,8 @@ resource "aws_s3_bucket_public_access_block" "airflow_dags_access" {
 resource "aws_mwaa_environment" "this" {
   name                 = "airflow-ds-test"
   dag_s3_path          = "dags/"
-  plugins_s3_path      = "plugins.zip"
-  requirements_s3_path = "requirements.txt"
+    #plugins_s3_path      = "plugins.zip"
+    #requirements_s3_path = "requirements.txt"
   execution_role_arn   = "arn:aws:iam::605411976919:role/airflow-exec-ds-test"
   airflow_version      = "2.4.3"
   environment_class    = "mw1.small"
