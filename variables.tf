@@ -16,7 +16,7 @@ variable "region" {
   default     = "eu-central-1"
 }
 
-variable "account-id" {
+variable "account_id" {
   description = "AWS account ID"
   type        = string
   default     = "605411976919"
