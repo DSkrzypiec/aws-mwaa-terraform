@@ -44,6 +44,21 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id            = var.vpc_id
   service_name      = "com.amazonaws.${var.region}.s3"
   route_table_ids   = [aws_route_table.airflow_priv_route_table.id]
+  policy            = <<POLICY
+{
+    "Statement": [
+    {
+      "Sid": "Access-to-specific-bucket-only",
+      "Principal": "*",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::prod-region-starport-layer-bucket/*"]
+    }
+  ]
+}
+POLICY
 
   tags = {
     Name = "mwaa-${var.environment_name}-vpc-endpoint-s3"
@@ -138,3 +153,82 @@ resource "aws_vpc_endpoint" "airflow_ops" {
 }
 
 
+resource "aws_vpc_endpoint" "sqs" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.sqs"
+
+  private_dns_enabled = true
+  subnet_ids = [
+    aws_subnet.airflow_priv_subnet1.id, aws_subnet.airflow_priv_subnet2.id
+  ]
+  security_group_ids = [aws_security_group.airflow_sg.id]
+
+  tags = {
+    Name = "mwaa-${var.environment_name}-vpc-endpoint-sqs"
+  }
+}
+
+resource "aws_vpc_endpoint" "ecr-dkr" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ecr.dkr"
+
+  private_dns_enabled = true
+  subnet_ids = [
+    aws_subnet.airflow_priv_subnet1.id, aws_subnet.airflow_priv_subnet2.id
+  ]
+  security_group_ids = [aws_security_group.airflow_sg.id]
+
+  tags = {
+    Name = "mwaa-${var.environment_name}-vpc-endpoint-ecr-dkr"
+  }
+}
+
+resource "aws_vpc_endpoint" "kms" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.kms"
+
+  private_dns_enabled = true
+  subnet_ids = [
+    aws_subnet.airflow_priv_subnet1.id, aws_subnet.airflow_priv_subnet2.id
+  ]
+  security_group_ids = [aws_security_group.airflow_sg.id]
+
+  tags = {
+    Name = "mwaa-${var.environment_name}-vpc-endpoint-kms"
+  }
+}
+
+resource "aws_vpc_endpoint" "monitoring" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.monitoring"
+
+  private_dns_enabled = true
+  subnet_ids = [
+    aws_subnet.airflow_priv_subnet1.id, aws_subnet.airflow_priv_subnet2.id
+  ]
+  security_group_ids = [aws_security_group.airflow_sg.id]
+
+  tags = {
+    Name = "mwaa-${var.environment_name}-vpc-endpoint-monitoring"
+  }
+}
+
+resource "aws_vpc_endpoint" "logs" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.logs"
+
+  private_dns_enabled = true
+  subnet_ids = [
+    aws_subnet.airflow_priv_subnet1.id, aws_subnet.airflow_priv_subnet2.id
+  ]
+  security_group_ids = [aws_security_group.airflow_sg.id]
+
+  tags = {
+    Name = "mwaa-${var.environment_name}-vpc-endpoint-logs"
+  }
+}
