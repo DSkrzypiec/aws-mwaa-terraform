@@ -22,8 +22,6 @@ resource "aws_subnet" "airflow_priv_subnet2" {
 
 resource "aws_route_table" "airflow_priv_route_table" {
   vpc_id = var.vpc_id
-  route  = []
-
   tags = {
     Name = "mwaa-${var.environment_name}-private-routes-a"
   }

@@ -19,7 +19,11 @@ data "aws_iam_policy_document" "assume" {
     principals {
       identifiers = [
         "airflow-env.amazonaws.com",
-        "airflow.amazonaws.com"
+        "airflow.amazonaws.com",
+        "batch.amazonaws.com",
+        "ssm.amazonaws.com",
+        "lambda.amazonaws.com",
+        "s3.amazonaws.com"
       ]
       type = "Service"
     }
@@ -122,9 +126,14 @@ data "aws_iam_policy_document" "base" {
       "kms:GenerateDataKey*",
       "kms:Encrypt"
     ]
-    resources = [
-      "arn:aws:kms:${var.region}::*"
-    ]
+    not_resources = ["arn:aws:kms:*:${var.account_id}:key/*"]
+    condition {
+      test = "StringLike"
+      values = [
+        "sqs.${var.region}.amazonaws.com"
+      ]
+      variable = "kms:ViaService"
+    }
   }
 }
 
